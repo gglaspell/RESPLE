@@ -15,6 +15,9 @@ These four variants have been tested in real-world datasets and our own experime
   author={Cao, Ziyu and Talbot, William and Li, Kailai},
   title={RESPLE: Recursive Spline Estimation for LiDAR-Based Odometry}, 
   journal={IEEE Robotics and Automation Letters},
+  volume={10},
+  number={10},
+  pages={10666-10673},
   year={2025}
 }
 ``` 
@@ -121,7 +124,7 @@ source install/setup.bash
 ros2 bag play /path/to/bag/
 ```
   
-* GrandTour (Hesai XT32, Livox Mid360)
+* [GrandTour](https://grand-tour.leggedrobotics.com/) dataset (Hesai XT32, Livox Mid360)
 ```
 source install/setup.bash
 ros2 launch resple resple_heap_testsite_hoenggerberg.launch.py
