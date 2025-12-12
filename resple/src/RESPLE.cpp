@@ -165,19 +165,23 @@ public:
                     est_msg.runtime.data = 0;
                     pub_est->publish(est_msg);
                     max_spl_knots = spline->numKnots();
-
-                    // --- POSESTAMPED PUBLISHING START ---
-                    int64_t pose_time_ns = spline->maxTimeNs();
+                }
+                // --- Always publish latest PoseStamped using the most recently processed time (max_time_ns) ---
+                {
+                    int64_t pose_time_ns = max_time_ns;
+                    // Fallback if max_time_ns is not set
+                    if (pose_time_ns <= 0) {
+                        pose_time_ns = spline->maxTimeNs();
+                    }
                     Eigen::Vector3d t_pose = spline->itpPosition(pose_time_ns);
                     Eigen::Quaterniond q_pose;
                     spline->itpQuaternion(pose_time_ns, &q_pose);
 
                     geometry_msgs::msg::PoseStamped pose_msg;
-                    pose_msg.header.stamp = rclcpp::Time(pose_time_ns);
+                    pose_msg.header.stamp = rclcpp::Time(pose_time_ns, rcl_clock_type_t::RCL_ROS_TIME);
                     pose_msg.header.frame_id = odom_id;
                     pose_msg.pose = CommonUtils::pose2msg(t_pose, q_pose);
                     pub_pose->publish(pose_msg);
-                    // --- POSESTAMPED PUBLISHING END ---
                 }
                 if (max_time_ns >= t_last_map_upd + 1e8) {
                     mapIncremental();
